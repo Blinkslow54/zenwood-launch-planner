@@ -1,7 +1,7 @@
 /**
  * ZENWOOD LAUNCH PLANNER — CONFIGURATION
  * ------------------------------------------------------------
- * Nothing is pre-configured. Fill these in before sharing the link.
+ * Submissions go to Blinkslow MKTG's Formspree form (see `endpoint`).
  *
  * SUBMISSION
  *   endpoint        URL that accepts a POST of the plan (JSON).
@@ -22,7 +22,7 @@
  * e.g. 'https://formspree.io/f/abcd1234', into `endpoint` below.
  */
 export const SUBMISSION = {
-  endpoint: '', // ← paste your Formspree form address here
+  endpoint: 'https://formspree.io/f/mpppnbvk', // Formspree form (Blinkslow MKTG)
   method: 'POST',
   headers: {
     Accept: 'application/json',

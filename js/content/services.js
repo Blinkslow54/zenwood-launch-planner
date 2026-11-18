@@ -13,7 +13,7 @@
  *   goal      the purpose of the service
  *   included  bullet list of what Blinkslow provides
  *   note      optional clarifying note shown in the detail panel
- *   perCabin  true if produced per cabin (summary shows cabin count)
+ *   (Prices and shoot-day requirements live in js/content/pricing.js.)
  *   preview   'brandKit' shows the "View Example Brand Kit" button
  *   followUp  'influencerType' shows the optional influencer sub-question
  */
@@ -104,7 +104,8 @@ export const CATEGORIES = [
           'Lifestyle and environmental footage',
           'Professional editing and delivery',
         ],
-        note: 'These are supplementary videos, not full-length property walkthroughs.',
+        note: 'These are supplementary videos, not full-length property walkthroughs. A standalone add-on with no shoot day required.',
+        followUp: 'videoCount',
       },
       {
         id: 'website-photography',
@@ -112,6 +113,7 @@ export const CATEGORIES = [
         short: 'A cohesive image library capturing the property, landscape, and guest experience.',
         goal: "Create a cohesive library of professional imagery for Zenwood's main website.",
         included: [
+          'All photos delivered in horizontal format',
           'Lifestyle photography',
           'Landscape and environmental photography',
           'Amenities and shared spaces',
@@ -119,7 +121,7 @@ export const CATEGORIES = [
           'Images communicating the atmosphere and guest experience',
         ],
         note:
-          'Focused on the overall Zenwood brand and experience. Individual cabin listing photography is covered under Cabin Booking Pages.',
+          'Horizontal photos of the property, landscape, and guest experience, with and without the model. Individual cabin listing photography is covered under Cabin Booking Pages.',
       },
     ],
   },
@@ -129,11 +131,9 @@ export const CATEGORIES = [
     number: '03',
     eyebrow: 'Launch Marketing',
     title: 'Cabin Booking Pages',
-    badge: 'Produced per cabin',
     roadmapBlurb: 'Photography and video that help each cabin stand on its own.',
     intro:
       'Each cabin needs to stand on its own. Professional photos and video help potential guests understand the property, imagine their stay, and feel confident making a booking.',
-    extras: ['cabinCount'],
     services: [
       {
         id: 'cabin-photography',
@@ -141,18 +141,18 @@ export const CATEGORIES = [
         short: "Polished interior and exterior imagery for each cabin's booking page.",
         goal: "Showcase each cabin's design, layout, amenities, and unique features to help convert visitors into bookings.",
         included: [
-          'Professional interior photography',
-          'Exterior photography',
+          'Interior photography of one cabin',
+          'Exterior photography of all 10 cabins',
           'Amenities and property features',
           'Architectural and design details',
           'Professionally edited images',
         ],
-        perCabin: true,
+        note: 'Interior photography of one cabin plus exteriors of all 10 cabins, photographed together.',
       },
       {
         id: 'cabin-video',
         name: 'Cabin Marketing Video',
-        short: 'An immersive, cinematic walkthrough of each cabin — one video for listings and marketing.',
+        short: 'An immersive, cinematic walkthrough of one cabin — a single video for its listing and marketing.',
         goal: 'Give potential guests an immersive walkthrough of the cabin while communicating its atmosphere and experience.',
         included: [
           'Professional video walkthrough',
@@ -161,8 +161,7 @@ export const CATEGORIES = [
           'Cinematic editing and color grading',
           'Finished marketing video',
         ],
-        note: 'One video serves both purposes — a listing walkthrough and a marketing piece.',
-        perCabin: true,
+        note: 'One walkthrough video of one cabin, serving as both the listing walkthrough and a marketing piece.',
       },
     ],
   },
@@ -193,11 +192,11 @@ export const CATEGORIES = [
           'Performance monitoring',
           'Adjustments and optimization throughout the launch',
         ],
-        note: 'Strategy and execution together, as a defined launch project — not an automatic ongoing retainer.',
+        note: 'Includes Launch Production and Content Creation. Strategy, research, and about 9 weeks of captions, scheduling, and posting, as a defined launch project — not an automatic ongoing retainer.',
       },
       {
         id: 'social-content',
-        name: 'Launch Content Creation',
+        name: 'Launch Production and Content Creation',
         short: 'Reels, short-form video, and photography produced specifically for social.',
         goal: 'Produce professional photography and video content that introduces Zenwood and communicates the experience across social media.',
         included: [
@@ -207,6 +206,7 @@ export const CATEGORIES = [
           'Professional editing',
           'Final content delivery',
         ],
+        note: 'About 26 social posts (reels and photo carousels).',
       },
       {
         id: 'influencer-management',
@@ -223,7 +223,7 @@ export const CATEGORIES = [
           'Content review and brand alignment',
           'Campaign timelines and organization',
         ],
-        note: 'The Influencer Creative Brief is a separate deliverable under Brand Foundation.',
+        note: 'Priced per creator. Creators’ own fees are billed separately, at cost. The Influencer Creative Brief is a separate deliverable under Brand Foundation.',
         followUp: 'influencerType',
       },
     ],
@@ -231,14 +231,6 @@ export const CATEGORIES = [
 ];
 
 /* ---------- Conditional questions ---------- */
-
-export const CABIN_COUNT = {
-  question: 'How many cabins would you like us to capture?',
-  hint: "Optional. Not every cabin needs both photography and video — we'll sort out the details together.",
-  notSureLabel: 'Not sure yet',
-  min: 1,
-  max: 99,
-};
 
 export const INFLUENCER_SUPPORT = {
   question: 'What type of influencer support would be helpful?',
@@ -257,7 +249,7 @@ export const SOCIAL_PAIRING = {
   contentOnly:
     "If Zenwood already has a social media strategy in place, we're happy to focus on content production. We'll just need your existing strategy, content goals, and creative direction so we know what to capture and how to approach production.",
   both:
-    'With both selected, Blinkslow can coordinate the strategy, content creation, and launch execution together — one plan, one team, and a consistent voice from first post to last.',
+    'Launch Strategy & Management includes Launch Production and Content Creation, so the strategy, content, and launch execution are planned and delivered together — one plan, one team, and a consistent voice from first post to last.',
 };
 
 /* ---------- Post-launch support (intentionally simple) ---------- */

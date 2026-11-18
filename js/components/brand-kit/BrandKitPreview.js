@@ -47,23 +47,61 @@ function placeholderBody() {
   ];
 }
 
-function externalBody(src) {
-  const isPdf = /\.pdf($|\?)/i.test(src);
-  const note = BRAND_KIT_PREVIEW.note
+const exampleNote = () =>
+  BRAND_KIT_PREVIEW.note
     ? h('p', { class: 'bk-note', role: 'note' }, h('span', { class: 'bk-disclaimer__tag' }, 'Example'), BRAND_KIT_PREVIEW.note)
     : null;
-  if (isPdf) return [note, h('iframe', { class: 'bk-embed', src, title: BRAND_KIT_PREVIEW.title })];
+
+const pdfLink = () =>
+  BRAND_KIT_PREVIEW.pdf
+    ? h('a', { class: 'link-btn bk-full', href: BRAND_KIT_PREVIEW.pdf, target: '_blank', rel: 'noopener' }, 'Open PDF', icons.arrow())
+    : null;
+
+/** Page-by-page gallery of the example kit (images load as they scroll into view). */
+function pagesBody(pages) {
+  const total = pages.length;
+  const list = h(
+    'ol',
+    { class: 'bk-pages', 'aria-label': `${BRAND_KIT_PREVIEW.title}, ${total} pages` },
+    pages.map((p, i) => {
+      const img = h('img', {
+        class: 'bk-image',
+        src: p.src,
+        alt: `Page ${i + 1} of ${total}: ${p.title}`,
+        loading: i < 2 ? 'eager' : 'lazy',
+        decoding: 'async',
+        width: p.width || 1600,
+        height: p.height || 1000,
+      });
+      img.addEventListener('error', () => img.closest('li')?.remove(), { once: true });
+      return h(
+        'li',
+        { class: 'bk-page' },
+        h('figure', { class: 'bk-figure' }, img),
+        h('p', { class: 'bk-page__caption' }, h('span', null, String(i + 1).padStart(2, '0')), p.title)
+      );
+    })
+  );
+  return [h('div', { class: 'bk-toolbar' }, exampleNote(), pdfLink()), list, pdfLink()];
+}
+
+function externalBody(src) {
+  const isPdf = /\.pdf($|\?)/i.test(src);
+  if (isPdf) return [exampleNote(), h('iframe', { class: 'bk-embed', src, title: BRAND_KIT_PREVIEW.title })];
 
   const img = h('img', { class: 'bk-image', src, alt: BRAND_KIT_PREVIEW.alt || BRAND_KIT_PREVIEW.title, decoding: 'async' });
   const figure = h('figure', { class: 'bk-figure' }, img);
   // If the file is missing, fall back to the built-in placeholder rather than a broken image.
   img.addEventListener('error', () => figure.closest('.bk-dialog__body')?.replaceChildren(...placeholderBody()), { once: true });
   const full = h('a', { class: 'link-btn bk-full', href: src, target: '_blank', rel: 'noopener' }, 'Open full size', icons.arrow());
-  return [note, figure, full];
+  return [exampleNote(), figure, full];
 }
 
 function build() {
   const close = () => dialog.close();
+  const pages = BRAND_KIT_PREVIEW.pages || [];
+  const hasMedia = pages.length > 0 || !!BRAND_KIT_PREVIEW.src;
+  const body = pages.length ? pagesBody(pages) : BRAND_KIT_PREVIEW.src ? externalBody(BRAND_KIT_PREVIEW.src) : placeholderBody();
   dialog = h(
     'dialog',
     { class: 'bk-dialog', 'aria-labelledby': 'bk-title' },
@@ -72,9 +110,9 @@ function build() {
         h('div', null,
           h('p', { class: 'eyebrow' }, 'Brand Foundation'),
           h('h2', { class: 'bk-dialog__title', id: 'bk-title' }, BRAND_KIT_PREVIEW.title || KIT.title),
-          h('p', { class: 'bk-dialog__subtitle' }, (BRAND_KIT_PREVIEW.src && BRAND_KIT_PREVIEW.subtitle) || KIT.subtitle)),
+          h('p', { class: 'bk-dialog__subtitle' }, (hasMedia && BRAND_KIT_PREVIEW.subtitle) || KIT.subtitle)),
         h('button', { type: 'button', class: 'icon-btn', 'aria-label': 'Close example Brand Kit', onclick: close }, icons.close())),
-      h('div', { class: `bk-dialog__body${BRAND_KIT_PREVIEW.src ? ' bk-dialog__body--media' : ''}` }, BRAND_KIT_PREVIEW.src ? externalBody(BRAND_KIT_PREVIEW.src) : placeholderBody()),
+      h('div', { class: `bk-dialog__body${hasMedia ? ' bk-dialog__body--media' : ''}` }, body),
       h('footer', { class: 'bk-dialog__foot' },
         h('button', { type: 'button', class: 'btn btn--ghost', onclick: close }, 'Back to Launch Planner')))
   );

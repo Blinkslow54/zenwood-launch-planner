@@ -2,11 +2,10 @@ import { h, icons, id } from '../lib/dom.js';
 import { store } from '../state/store.js';
 import { registerCategory, goToCategory, scrollToId } from '../lib/navigation.js';
 import { ExpandableService } from './ExpandableService.js';
-import { CabinCountQuestion, SocialPairingNote } from './ConditionalQuestions.js';
+import { SocialPairingNote } from './ConditionalQuestions.js';
 import { SectionNote } from './SectionNote.js';
 
 const EXTRAS = {
-  cabinCount: CabinCountQuestion,
   socialPairing: SocialPairingNote,
 };
 

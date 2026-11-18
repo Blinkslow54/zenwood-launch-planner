@@ -32,13 +32,13 @@ export const HERO = {
     "We've outlined the areas where Blinkslow can help bring Zenwood to life. Explore the options, select where you'd like support, and we'll put together a customized proposal based on your needs.",
   ],
   cta: 'Explore Launch Services',
-  reassurance: 'Explore at your own pace. No pricing or commitments required.',
+  reassurance: 'Explore at your own pace. Your plan and its quote update as you go.',
 };
 
 export const ROADMAP = {
   eyebrow: 'The Launch Roadmap',
   heading: 'Everything builds from a clear foundation.',
-  body: 'Brand direction shapes every piece that follows — the website, each cabin, and how Zenwood shows up on social. Explore each section below and add the services you’d like quoted. Your selections build your launch plan at the end.',
+  body: 'Brand direction shapes every piece that follows — the website, each cabin, and how Zenwood shows up on social. Explore each section below and add the services you’d like. Your selections, and their total, build your launch plan at the end.',
   foundationCaption: 'Guides everything below',
 };
 
@@ -56,9 +56,9 @@ export const HOW_IT_WORKS = {
   steps: [
     { title: 'Open a section', body: 'Each section lists the services available for that part of the launch.' },
     { title: 'Read the details', body: 'See the goal of each service and what’s included.' },
-    { title: 'Add to your plan', body: 'Tap “Add to plan” on anything you’d like us to quote. Tap again to remove it.' },
+    { title: 'Add to your plan', body: 'Tap “Add to plan” on anything you’d like. Your total updates as you go, and you can tap again to remove it.' },
   ],
-  note: 'Nothing is committed — your selections simply tell us what to include in your proposal.',
+  note: 'Nothing is committed. Your total is a quote — we’ll talk through the full scope together on a scope call, and the quote can be adjusted then.',
 };
 
 export const STAGES = {
@@ -76,8 +76,8 @@ export const STAGES = {
 export const SUMMARY = {
   eyebrow: 'Your Selections',
   heading: 'Your Zenwood Launch Plan',
-  body: "Here's what you've chosen so far. You can return to any section to make changes — everything is saved as you go.",
-  empty: "You haven't added any services yet. Explore the sections above and choose “Add to My Launch Plan” on anything you'd like quoted.",
+  body: "Here's what you've chosen so far, with your quote. You can return to any section to make changes — everything is saved as you go.",
+  empty: "You haven't added any services yet. Explore the sections above and choose “Add to My Launch Plan” on anything you'd like in your plan.",
   notesLabel: 'Anything else we should know about your launch, timeline, or marketing needs?',
   notesPlaceholder: 'Optional',
   dateLabel: 'Target launch date',
@@ -87,7 +87,7 @@ export const SUMMARY = {
 export const SUBMIT = {
   cta: 'Send My Selections to Blinkslow',
   sending: 'Sending…',
-  reassurance: "We'll review your selections and follow up with a customized proposal. No account or payment needed.",
+  reassurance: "Send your selections and we'll set up a scope call to walk through the full scope, where your quote can be adjusted. No account or payment needed.",
   success: {
     heading: 'Thank you — your selections are on their way.',
     body: "Blinkslow has received your launch plan and will be in touch with a customized proposal.",

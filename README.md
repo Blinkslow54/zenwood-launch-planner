@@ -42,6 +42,7 @@ Then open http://localhost:5178.
 | To change… | Edit |
 |---|---|
 | Service names, descriptions, goals, inclusions, order, conditional question wording | `js/content/services.js` |
+| Prices, production blocks, travel, client pricing notes (bundle discount currently off) | `js/content/pricing.js` (amounts in cents). The calculation is in `js/lib/pricing.js`. To test it, run `(await import('/tests/pricing.test.js')).run()` in the browser console on the local preview. |
 | Hero, roadmap, summary and submission copy | `js/content/site-copy.js` |
 | Submission endpoint / email fallback | `js/config.js` → `SUBMISSION` |
 | Example Brand Kit | The image is `assets/brand-kit/zenwood-brand-kit-concept-01.webp`. Its title, caption and label are set in `BRAND_KIT_PREVIEW` in `js/config.js`. To show a different file, change `src` (an image or a PDF both work). Set `src` to `''` to go back to the built-in placeholder in `js/components/brand-kit/example-brand-kit.js`. |

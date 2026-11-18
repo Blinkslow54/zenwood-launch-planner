@@ -1,72 +1,6 @@
 import { h, icons, id } from '../lib/dom.js';
 import { store } from '../state/store.js';
-import { CABIN_COUNT, INFLUENCER_SUPPORT, SOCIAL_PAIRING } from '../content/services.js';
-
-/** Optional: number of cabins to capture (number stepper or "Not sure yet"). */
-export function CabinCountQuestion() {
-  const inputId = id('cabins');
-  const hintId = id('cabins-hint');
-
-  const input = h('input', {
-    id: inputId,
-    class: 'stepper__input',
-    type: 'number',
-    inputmode: 'numeric',
-    min: CABIN_COUNT.min,
-    max: CABIN_COUNT.max,
-    placeholder: '—',
-    'aria-describedby': hintId,
-  });
-
-  const clamp = (n) => Math.max(CABIN_COUNT.min, Math.min(CABIN_COUNT.max, n));
-  const commit = (n) => store.set({ cabinCount: n, cabinNotSure: n ? false : store.get().cabinNotSure });
-
-  input.addEventListener('input', () => {
-    const n = parseInt(input.value, 10);
-    commit(Number.isFinite(n) && n > 0 ? clamp(n) : null);
-  });
-  input.addEventListener('blur', () => sync(store.get()));
-
-  const step = (delta) => {
-    const cur = store.get().cabinCount || 0;
-    const next = cur + delta;
-    commit(next < CABIN_COUNT.min ? null : clamp(next));
-  };
-
-  const dec = h('button', { type: 'button', class: 'stepper__btn', 'aria-label': 'One fewer cabin', onclick: () => step(-1) }, icons.minus());
-  const inc = h('button', { type: 'button', class: 'stepper__btn', 'aria-label': 'One more cabin', onclick: () => step(1) }, icons.plus());
-
-  const notSure = h(
-    'button',
-    {
-      type: 'button',
-      class: 'chip',
-      'aria-pressed': 'false',
-      onclick: () => {
-        const on = !store.get().cabinNotSure;
-        store.set({ cabinNotSure: on, cabinCount: on ? null : store.get().cabinCount });
-      },
-    },
-    h('span', { class: 'chip__dot', 'aria-hidden': 'true' }),
-    CABIN_COUNT.notSureLabel
-  );
-
-  function sync(s) {
-    if (document.activeElement !== input) input.value = s.cabinCount ?? '';
-    dec.disabled = !s.cabinCount;
-    notSure.setAttribute('aria-pressed', String(!!s.cabinNotSure));
-  }
-  sync(store.get());
-  store.subscribe(sync);
-
-  return h(
-    'div',
-    { class: 'question question--cabins' },
-    h('label', { class: 'question__label', for: inputId }, CABIN_COUNT.question),
-    h('p', { class: 'question__hint', id: hintId }, CABIN_COUNT.hint),
-    h('div', { class: 'question__controls' }, h('div', { class: 'stepper' }, dec, input, inc), h('span', { class: 'question__or', 'aria-hidden': 'true' }, 'or'), notSure)
-  );
-}
+import { INFLUENCER_SUPPORT, SOCIAL_PAIRING } from '../content/services.js';
 
 /** Optional sub-question shown once Influencer Partnership Management is selected. */
 export function InfluencerTypeQuestion() {
@@ -107,4 +41,42 @@ export function SocialPairingNote() {
   sync(store.get());
   store.subscribe(sync);
   return wrap;
+}
+
+/**
+ * Quantity stepper for per-unit services (supporting videos, creators).
+ * Minimum 1, since the service is priced per unit once selected.
+ */
+export function CountQuestion({ key, question, hint, unitPrice, min = 1, max = 30 }) {
+  const inputId = id(`count-${key}`);
+  const hintId = id(`count-${key}-hint`);
+  const clamp = (n) => Math.max(min, Math.min(max, n));
+  const input = h('input', { id: inputId, class: 'stepper__input', type: 'number', inputmode: 'numeric', min, max, 'aria-describedby': hintId });
+  input.addEventListener('input', () => {
+    const n = parseInt(input.value, 10);
+    if (Number.isFinite(n)) store.set({ [key]: clamp(n) });
+  });
+  input.addEventListener('blur', () => sync(store.get()));
+  const step = (d) => store.set({ [key]: clamp((parseInt(store.get()[key], 10) || min) + d) });
+  const dec = h('button', { type: 'button', class: 'stepper__btn', 'aria-label': 'One fewer', onclick: () => step(-1) }, icons.minus());
+  const inc = h('button', { type: 'button', class: 'stepper__btn', 'aria-label': 'One more', onclick: () => step(1) }, icons.plus());
+  const subtotal = h('span', { class: 'question__subtotal', 'aria-live': 'polite' });
+
+  function sync(s) {
+    const n = clamp(parseInt(s[key], 10) || min);
+    if (document.activeElement !== input) input.value = n;
+    dec.disabled = n <= min;
+    inc.disabled = n >= max;
+    subtotal.textContent = unitPrice ? unitPrice(n) : '';
+  }
+  sync(store.get());
+  store.subscribe(sync);
+
+  return h(
+    'div',
+    { class: 'question question--inline question--count' },
+    h('label', { class: 'question__label', for: inputId }, question),
+    hint ? h('p', { class: 'question__hint', id: hintId }, hint) : null,
+    h('div', { class: 'question__controls' }, h('div', { class: 'stepper' }, dec, input, inc), subtotal)
+  );
 }

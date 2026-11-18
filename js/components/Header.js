@@ -2,6 +2,7 @@ import { h } from '../lib/dom.js';
 import { store } from '../state/store.js';
 import { goToCategory, scrollToId } from '../lib/navigation.js';
 import { Wordmark } from './Wordmark.js';
+import { computeQuote, formatRange } from '../lib/pricing.js';
 
 /**
  * Slim top bar: wordmark, quiet stage links (desktop), and the plan
@@ -12,10 +13,12 @@ export function Header() {
     h('a', { href: '#', class: 'site-nav__link', onclick: (e) => (e.preventDefault(), onClick()) }, label);
 
   const count = h('span', { class: 'plan-pill__count' }, '0');
+  const total = h('span', { class: 'plan-pill__total' });
   const pill = h(
     'a',
     { href: '#summary', class: 'plan-pill', onclick: (e) => (e.preventDefault(), scrollToId('summary')) },
     h('span', { class: 'plan-pill__label' }, 'Your Plan'),
+    total,
     count
   );
 
@@ -39,9 +42,13 @@ export function Header() {
 
   const update = (state) => {
     const n = state.selected.length;
+    const q = computeQuote(state);
+    const sum = q.isEmpty ? '' : formatRange(q.total, q.totalHigh, { round: true });
     count.textContent = String(n);
+    total.textContent = sum;
+    total.hidden = !sum;
     pill.classList.toggle('has-items', n > 0);
-    pill.setAttribute('aria-label', `Your launch plan: ${n} service${n === 1 ? '' : 's'} selected. Go to summary.`);
+    pill.setAttribute('aria-label', `Your launch plan: ${n} service${n === 1 ? '' : 's'} selected${sum ? `, quote ${sum}` : ''}. Go to summary.`);
   };
   update(store.get());
   store.subscribe((s, meta) => {

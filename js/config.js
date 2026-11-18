@@ -37,20 +37,41 @@ export const SUBMISSION = {
 
 /**
  * BRAND KIT PREVIEW
- *   src   When the real example Brand Kit is ready, set this to a PDF or
- *         image path/URL (e.g. 'assets/example-brand-kit.pdf'). The modal
- *         will display it instead of the built-in placeholder.
- *         Leave '' to show the placeholder from
- *         js/components/brand-kit/example-brand-kit.js
+ *   pages  Images of each page, shown as a scrolling gallery (works on every
+ *          device; phones can't reliably display an embedded PDF).
+ *          To replace the example: export each page of the new PDF as an
+ *          image into assets/brand-kit/, and list them here with a title.
+ *   pdf    The original file, offered as "Open PDF".
+ *   src    Alternative to `pages`: a single image (or PDF) to show instead.
+ *   Leave `pages` empty and `src` '' to show the built-in placeholder from
+ *   js/components/brand-kit/example-brand-kit.js
  */
+const KIT_DIR = 'assets/brand-kit/social-brand-guide';
+const KIT_PAGE_SIZE = { width: 1600, height: 900 }; // widescreen (16:9) pages
+const KIT_PAGE_TITLES = [
+  'Cover',
+  'Typography',
+  'Color Palette',
+  'Brand Foundation',
+  'Photography Direction',
+  'Color Grade Direction',
+  'The Funnel',
+  'Content Pillars',
+  'Target Audiences',
+  'Measuring Success',
+];
+
 export const BRAND_KIT_PREVIEW = {
-  src: 'assets/brand-kit/zenwood-brand-kit-concept-01.webp',
+  pages: KIT_PAGE_TITLES.map((title, i) => ({
+    src: `${KIT_DIR}/page-${String(i + 1).padStart(2, '0')}.jpg`,
+    title,
+    ...KIT_PAGE_SIZE,
+  })),
+  pdf: 'assets/brand-kit/zenwood-social-brand-guide.pdf',
+  src: '',
   title: 'Example Brand Kit',
-  subtitle: 'Concept 01 — an example of what a Zenwood Brand Kit could include.',
-  alt:
-    'Zenwood Brand Kit, Concept 01: brand story, positioning and pillars (Escape, Presence, Nature, Refinement), ' +
-    'color palette and typography, photography and video direction, brand voice, and social direction with sample imagery.',
-  note: 'Example concept for illustration. Your final Brand Kit is developed together and builds on Zenwood’s existing identity.',
+  subtitle: 'Social Brand Guide — an example of what a Zenwood Brand Kit could include.',
+  note: 'Example concept for discussion. Your final Brand Kit is developed together and builds on Zenwood’s existing identity.',
 };
 
 export const STORAGE_KEY = 'zenwood-launch-plan:v1';

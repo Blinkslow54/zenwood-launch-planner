@@ -2,7 +2,30 @@ import { h, icons, id } from '../lib/dom.js';
 import { store } from '../state/store.js';
 import { SelectionPill } from './SelectionControl.js';
 import { ServiceDetailPanel } from './ServiceDetailPanel.js';
-import { InfluencerTypeQuestion } from './ConditionalQuestions.js';
+import { InfluencerTypeQuestion, CountQuestion } from './ConditionalQuestions.js';
+import { SERVICE_PRICING } from '../content/pricing.js';
+import { formatMoney } from '../lib/pricing.js';
+import { PriceTag } from './PriceTag.js';
+
+/** Extra questions shown once a service is added (quantities, influencer type). */
+function followUpFor(service) {
+  const p = SERVICE_PRICING[service.id];
+  const qty = (question, hint, max) =>
+    CountQuestion({
+      key: p.countKey,
+      question,
+      hint,
+      max,
+      unitPrice: (n) => `${n} × ${formatMoney(p.amount)} = ${formatMoney(p.amount * n)}`,
+    });
+  if (service.followUp === 'videoCount') return qty('How many supporting videos?', 'Short videos for individual website sections.');
+  if (service.followUp === 'influencerType') {
+    return h('div', { class: 'followups' },
+      qty('How many creators?', 'Priced per creator. Creators’ own fees are billed separately, at cost.', 100),
+      InfluencerTypeQuestion());
+  }
+  return null;
+}
 
 /**
  * One service row: name and summary, with two explicit actions —
@@ -19,6 +42,7 @@ export function ExpandableService(service) {
     'button',
     { type: 'button', class: 'service__toggle', 'aria-expanded': 'false', 'aria-controls': panelId, onclick: () => setOpen(!open) },
     h('span', { class: 'service__name' }, service.name, tag),
+    SERVICE_PRICING[service.id] ? PriceTag(SERVICE_PRICING[service.id], 'service__price') : null,
     h('span', { class: 'service__short' }, service.short)
   );
 
@@ -36,7 +60,7 @@ export function ExpandableService(service) {
     h('div', { class: 'collapse__inner' }, ServiceDetailPanel(service))
   );
 
-  const followUp = service.followUp === 'influencerType' ? InfluencerTypeQuestion() : null;
+  const followUp = followUpFor(service);
   const followWrap = followUp
     ? h('div', { class: 'collapse service__followup', inert: true }, h('div', { class: 'collapse__inner' }, followUp))
     : null;
@@ -66,6 +90,7 @@ export function ExpandableService(service) {
   const update = (s) => {
     const on = s.selected.includes(service.id);
     item.classList.toggle('is-selected', on);
+    tag.textContent = store.isLocked(service.id) ? 'Included with Strategy' : 'In your plan';
     if (followWrap) {
       followWrap.classList.toggle('is-open', on);
       followWrap.inert = !on;

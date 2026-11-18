@@ -12,6 +12,7 @@ import { ServiceCategory } from './components/ServiceCategory.js';
 import { PostLaunchSupport } from './components/PostLaunchSupport.js';
 import { SelectionSummary } from './components/SelectionSummary.js';
 import { HowItWorks } from './components/HowItWorks.js';
+import { VideoBubble } from './components/VideoModal.js';
 
 store.init(SERVICE_IDS);
 
@@ -58,6 +59,10 @@ const footer = h('footer', { class: 'site-footer' },
 
 const app = document.getElementById('app');
 app.replaceChildren(Header(), main, footer);
+if (MEDIA.videos?.quoteWalkthrough) {
+  const bubble = VideoBubble(MEDIA.videos.quoteWalkthrough);
+  if (bubble) document.body.append(bubble);
+}
 mountAnnouncer();
 
 /* Gentle reveal on scroll (skipped entirely for reduced motion). */
